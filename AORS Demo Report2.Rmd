@@ -22,7 +22,7 @@ uic="WAYCAA"
 cab="82nd ABN CAB"
 
 
-## Do a little data munging
+## Do a little data munging (you can just use the simpler file that I posted)
 hours=read_csv("aircraft_hours_maintenance_competitors_v2.csv") %>% 
   mutate(model2=str_sub(Model, start = 1L, end = -2L),`As Of Date`=mdy(`As Of Date`)) %>%
   filter(!is.na(CAB) & CAB!="#N/A") %>%

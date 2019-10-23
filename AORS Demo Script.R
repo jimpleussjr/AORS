@@ -29,22 +29,3 @@ for (i in 1:10) {
 }
 
 
-###Email it out
-# 
-# library(sendmailR)
-# 
-# from <- "jim.pleuss@gmail.com"
-# to <- "james.pleuss@westpoint.edu"
-# subject <- "Test Report Email for UIC WAA5AA"
-# body <- "Stuff"
-# 
-# mailControl = list(host.name = "smtp.gmail.com", port = 465, user.name = "jim.pleuss", passwd = "OddBuffalo2", ssl = TRUE)
-# 
-# 
-# attachmentObject <- mime_part(x="UIC Reports/WAA5AA Graph.pdf", name="WAA5AA Graph.pdf")
-# attachmentObject2 <- mime_part(x="UIC Reports/WAA5AA Graph.html", name="WAA5AA Graph.html")
-# bodyWithAttachment <- list(body,attachmentObject,attachmentObject2)
-# 
-# sendmail(from=from,to=to,subject=subject,msg=bodyWithAttachment,smtp=mailControl,authenticate = TRUE,
-#          send = TRUE)
-                                                            

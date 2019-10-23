@@ -6,6 +6,7 @@ output:
   ioslides_presentation:
     incremental: true
     widescreen: true
+    logo: AORS_QR.png
 ---
 
 #Context of the Problem
@@ -31,6 +32,8 @@ output:
 - The ```params``` argument defines the parameters used to override the declared variables in the rendered Markdown file YAML.
 
 - Putting this command inside a ```for``` loop (or custom function with ```apply()```) allows for multiple iterations
+
+- Example report.
 
 ```{r, eval=FALSE}
 
@@ -68,16 +71,29 @@ for (i in 1:10) {
 
 ```
 
+# Operational Application for ORSAs 
 
-## Final
+## Flight Hour Competition
 
-GitHub Repo for code
+- Competition put on by PA&E this past summer.
+
+- Goal was to predict flight hours for various CABs by month.
+
+- We didn't win.
+
+
+## Questions?
+
+GitHub Repo for code:
+https://github.com/jimpleussjr/AORS 
 
 MAJ Jim Pleuss
+
 `james.pleuss@westpoint.edu`
+
 845-938-8006
 
-
+![](AORS_QR.png)
 
 ```{r, echo=FALSE, eval=FALSE}
 library(tidyverse)
