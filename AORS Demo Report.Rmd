@@ -1,0 +1,71 @@
+---
+title: "Flight Hours Report"
+author: "MAJ Jim Pleuss"
+date: "October 23, 2019"
+output: pdf_document
+params: 
+  uic: "WAYCAA"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, error=FALSE, message=FALSE)
+library(tidyverse)
+library(stringr)
+library(lubridate)
+```
+
+## Flight Hour Summary for `r params$uic`. 
+
+
+```{r, fig.height=3.5 }
+uic="WAYCAA"
+cab="82nd ABN CAB"
+
+
+## Do a little data munging
+hours=read_csv("aircraft_hours_maintenance_competitors_v2.csv") %>% 
+  mutate(model2=str_sub(Model, start = 1L, end = -2L),`As Of Date`=mdy(`As Of Date`)) %>%
+  filter(!is.na(CAB) & CAB!="#N/A") %>%
+  select(`Hours Flown`,model2,`As Of Date`,`Serial Number`,CAB,UIC) %>% 
+  group_by(`As Of Date`) %>% mutate(Army=sum(`Hours Flown`)/n_distinct(`Serial Number`)) %>% ungroup() %>%
+  group_by(`As Of Date`,CAB) %>% mutate(Brigade=sum(`Hours Flown`)/n_distinct(`Serial Number`)) %>% ungroup() %>%
+  group_by(`As Of Date`,CAB,UIC) %>% mutate(Battalion=sum(`Hours Flown`)/n_distinct(`Serial Number`)) %>% ungroup() %>%
+  gather(level,hrs,Army,Brigade,Battalion)
+
+
+hours %>% 
+  filter(UIC==params$uic) %>%
+  # filter(UIC==uic) %>%
+  ggplot() +
+  aes(x=`As Of Date`,y=hrs, color=fct_relevel(level,"Army","Brigade","Battalion"),group=level) + 
+  geom_line(size=2) + 
+  geom_point(size=3) +
+  scale_color_manual(values=c("gray18","gray48","gold3","green","gold4")) +
+  labs(title=paste0("Hours Flown Per Airframe for ",params$uic,", ",hours$CAB[hours$UIC==params$uic]),color="Unit Level",x="Month",y="Hours Per Airframe")+
+  # labs(title=paste0("Hours Flown Per Airframe for ",uic,", ",hours$CAB[hours$UIC==uic]),color="Unit Level",x="Month",y="Hours Per Airframe")+
+  theme_light()+
+  theme(axis.text.x = element_text(angle=90),title=element_text(hjust=.5))
+
+# labs(title=paste0("Hours Flown Per Airframe for ",uic,", ",params$cab),color="Unit Level",x="Month",y="Hours Per Airframe")
+ 
+# Hours per airframe by airframe
+hours %>% 
+  filter(UIC==params$uic & level=="Battalion") %>%
+  # filter(UIC==uic & level=="Battalion") %>%
+  group_by(`As Of Date`) %>% 
+  mutate(tot_hours=sum(`Hours Flown`)) %>% ungroup() %>% 
+  group_by(model2,`As Of Date`) %>%
+  summarize(total=sum(`Hours Flown`), prop=sum(`Hours Flown`)/max(tot_hours)) %>% ungroup() %>% 
+  ggplot() +
+  aes(x=`As Of Date`,y=total, fill=model2) + 
+  geom_bar(stat="identity",position="stack") +
+  scale_fill_manual(values=c("blue2","brown","black","forestgreen","gold4")) +
+  labs(title=paste0("Hours Flown Per Airframe by Airframe Type for ",params$uic,", ",hours$CAB[hours$UIC==params$uic]),fill="Airframe Type",x="Month",y="Hours Per Airframe")+
+  # labs(title=paste0("Hours Flown Per Airframe by Airframe Type for ",uic,", ",hours$CAB[hours$UIC==uic]),fill="Airframe Type",x="Month",y="Hours Per Airframe")+
+  theme_light()+
+  theme(axis.text.x = element_text(angle=90),title=element_text(hjust=.5))
+
+
+```
+
+

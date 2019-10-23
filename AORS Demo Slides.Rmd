@@ -1,0 +1,112 @@
+---
+title: "Rendering Parameterized RMarkdown Reports"
+author: "MAJ Jim Pleuss, USMA"
+date: "October 23, 2019"
+output: 
+  ioslides_presentation:
+    incremental: true
+    widescreen: true
+---
+
+#Context of the Problem
+
+##Course End Feedback at West Point 
+
+- In AY19-2 West Point transitioned to a new Course End Feedback system with inadequate functionality.  
+
+- Goal: Create a unique summarized report for every department, program, and course at West Point with graphical depictions of course end feedback for every question in AY19-2.
+
+- Added Bonus: Provide comparisons of responses to the same questions at higher levels.
+
+- Challenge: This requires 500 unique reports with over 15,000 graphs (and some rudimentary word clouds for free text).
+
+- Limitations: Need to get these to people in about a week and a half.  Also, my Ctrl+Enter has a limited lifespan.
+
+
+
+##R Markdown Solution
+
+- Using the ```render()``` function, you can compile an R Markdown report from within the console or another R Script. Same as if you were to knit from within the Markdown document.
+
+- The ```params``` argument defines the parameters used to override the declared variables in the rendered Markdown file YAML.
+
+- Putting this command inside a ```for``` loop (or custom function with ```apply()```) allows for multiple iterations
+
+```{r, eval=FALSE}
+
+for (i in 1:10) {
+  ### <b>
+  rmarkdown::render("AORS Demo Report.Rmd",params=list(uic=uiclist$UIC[i]))
+  ### </b>
+  file.rename(from="AORS_Demo_Report.pdf", to =paste(uiclist$UIC[i],"Graph.pdf"))
+  file.copy(from=paste0(getwd(),"/",uiclist$UIC[i]," Graph.pdf"), 
+            to = paste0(getwd(),"/UIC Reports/",uiclist$UIC[i]," Graph.pdf"))
+  file.remove(paste0(getwd(),"/",uiclist$UIC[i]," Graph.pdf"))
+}
+
+```
+
+##Nuances to Consider
+
+- Troubleshooting is challenging.
+
+- Directory changes for files.
+
+- Delete file when re-running or name date/system time.
+
+```{r, eval=FALSE}
+
+for (i in 1:10) {
+  rmarkdown::render("AORS Demo Report.Rmd",params=list(uic=uiclist$UIC[i]))
+  ### <b>
+  file.rename(from="AORS_Demo_Report.pdf", to =paste(uiclist$UIC[i],"Graph.pdf"))
+  file.copy(from=paste0(getwd(),"/",uiclist$UIC[i]," Graph.pdf"), 
+            to = paste0(getwd(),"/UIC Reports/",uiclist$UIC[i]," Graph.pdf"))
+  file.remove(paste0(getwd(),"/",uiclist$UIC[i]," Graph.pdf"))
+  ### </b>
+}
+
+```
+
+
+## Final
+
+GitHub Repo for code
+
+MAJ Jim Pleuss
+`james.pleuss@westpoint.edu`
+845-938-8006
+
+
+
+```{r, echo=FALSE, eval=FALSE}
+library(tidyverse)
+hours=read_csv("aircraft_hours_maintenance_competitors_v2.csv")
+
+#Declare lists of CAB and UICs.
+cablist=hours %>% filter(!is.na(CAB) & CAB!="#N/A") %>% distinct(CAB)
+uiclist=hours %>% filter(!is.na(CAB) & CAB!="#N/A" & !is.na(UIC)) %>% distinct(UIC) 
+
+###PDF Documents
+
+# for (i in 1:length(uiclist)) {
+for (i in 1:10) {
+  # i=1
+  rmarkdown::render("AORS Demo Report.Rmd",params=list(uic=uiclist$UIC[i]))
+  file.rename(from="AORS_Demo_Report.pdf", to =paste(uiclist$UIC[i],"Graph.pdf"))
+  file.copy(from=paste0(getwd(),"/",uiclist$UIC[i]," Graph.pdf"), to = paste0(getwd(),"/UIC Reports/",uiclist$UIC[i]," Graph.pdf"))
+  file.remove(paste0(getwd(),"/",uiclist$UIC[i]," Graph.pdf"))
+}
+
+###HTML Documents
+
+# for (i in 1:length(uiclist)) {
+for (i in 1:10) {
+  # i=1
+  rmarkdown::render("AORS Demo Report.Rmd",params=list(uic=uiclist$UIC[i]))
+  file.rename(from="AORS_Demo_Report.html", to =paste(uiclist$UIC[i],"Graph.html"))
+  file.copy(from=paste0(getwd(),"/",uiclist$UIC[i]," Graph.html"), to = paste0(getwd(),"/UIC Reports/",uiclist$UIC[i]," Graph.html"))
+  file.remove(paste0(getwd(),"/",uiclist$UIC[i]," Graph.html"))
+}
+```
+
