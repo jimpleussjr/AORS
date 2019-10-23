@@ -81,6 +81,8 @@ for (i in 1:10) {
 
 - We didn't win.
 
+- Demonstration of the report.
+
 
 ## Questions?
 
