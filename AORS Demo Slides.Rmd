@@ -49,6 +49,20 @@ for (i in 1:10) {
 
 ```
 
+# Operational Application for ORSAs 
+
+## Flight Hour Competition
+
+- Competition put on by PA&E this past summer.
+
+- Goal was to predict flight hours for various CABs by month.
+
+- We didn't win.
+
+- Demonstration of the report.
+
+
+
 ##Nuances to Consider
 
 - Troubleshooting is challenging.
@@ -70,18 +84,6 @@ for (i in 1:10) {
 }
 
 ```
-
-# Operational Application for ORSAs 
-
-## Flight Hour Competition
-
-- Competition put on by PA&E this past summer.
-
-- Goal was to predict flight hours for various CABs by month.
-
-- We didn't win.
-
-- Demonstration of the report.
 
 
 ## Questions?
